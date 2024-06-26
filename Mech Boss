@@ -314,5 +314,3 @@ local function ActivateLowGraphics()
 end
 
 lowGraphicsButton.MouseButton1Click:Connect(ActivateLowGraphics)
-
-
