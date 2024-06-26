@@ -1,5 +1,5 @@
 local player = game.Players.LocalPlayer
-local bossPosition = Vector3.new(483.05, 333.55, 1222.51)  -- Coordenadas do boss
+local bossPosition = Vector3.new(479.05, 333.55, 1222.51)  -- Coordenadas do boss
 local lobbyPosition = Vector3.new(467.59, 285.60, 844.08)   -- Coordenadas do lobby
 
 -- Variável para controlar o estado do script
@@ -263,3 +263,54 @@ game:service("Players").LocalPlayer.Idled:connect(function()
     ab.Text = "AFK mode"
     ab.TextColor3 = Color3.new(0, 0.8, 0) -- Verde escuro (ativo)
 end)
+local player = game.Players.LocalPlayer
+local gui = Instance.new("ScreenGui")
+gui.Parent = player.PlayerGui
+
+local lowGraphicsButton = Instance.new("TextButton")
+lowGraphicsButton.Position = UDim2.new(0.9, 0, 0.45, 0)
+lowGraphicsButton.Size = UDim2.new(0, 150, 0, 35)
+lowGraphicsButton.Parent = gui
+lowGraphicsButton.Text = "Low Graphics"
+lowGraphicsButton.BackgroundColor3 = Color3.fromRGB(5, 125, 5)
+lowGraphicsButton.Font = Enum.Font.SourceSansBold
+lowGraphicsButton.TextSize = 24
+
+local function ActivateLowGraphics()
+    local g = game
+    local w = g.Workspace
+    local l = g.Lighting
+    local t = w.Terrain
+
+    -- Modifique os valores para ajustar o desempenho
+    t.WaterWaveSize = 0
+    t.WaterWaveSpeed = 0
+    t.WaterReflectance = 0
+    t.WaterTransparency = 0
+    l.GlobalShadows = false
+    l.FogEnd = 9e9
+    l.Brightness = 0
+    settings().Rendering.QualityLevel = "Level01"
+
+    for _, v in pairs(g:GetDescendants()) do
+        if v:IsA("Part") or v:IsA("Union") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
+            v.Material = Enum.Material.Plastic
+            v.Reflectance = 0
+        elseif v:IsA("Decal") or v:IsA("Texture") then
+            v.Transparency = 1
+        elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+            v.Lifetime = NumberRange.new(0)
+        elseif v:IsA("Explosion") then
+            v.BlastPressure = 1
+            v.BlastRadius = 1
+        elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") then
+            v.Enabled = false
+        elseif v:IsA("MeshPart") then
+            v.Material = Enum.Material.Plastic
+            v.Reflectance = 0
+            v.TextureID = 10385902758728957
+        end
+    end
+end
+
+lowGraphicsButton.MouseButton1Click:Connect(ActivateLowGraphics)
